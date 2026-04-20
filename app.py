@@ -10,8 +10,6 @@ from modules.dashboard import render_dashboard
 from modules.security import render_security
 from modules.support import render_support
 
-import time
-st.write(f"Sayfa şu an yenilendi: {time.time()}")
 
 # DB INIT
 init_db()
