@@ -1,0 +1,18 @@
+
+Dağıtık Sistemlerde Veri Tutarlılığı (CAP Teoremi)
+
+
+ag baglantılarında ne gösterilir?
+Ağ bağlantıları kısmında, cihazınızın o an dış dünyayla kurduğu tüm aktif 
+bağlantılar, bu bağlantıların hedef IP adresleri ve sistem üzerindeki trafik akışı görselleştirilerek şüpheli durumlar izlenir.
+
+8656070565:AAHQxJ9Ye_ru6NZ4zo2RQmJtfXG54tYBE1w
+
+CHAT_ID:   "id": 7621297112,
+
+
+pip install pyTelegramBotAPI #bu eger yuklenmezse program calısmaz
+
+#bruada amacımız bilgisayar açıldığında telegram üzerinden bize bildirim göndermek ve kapatma komutu vermek olacak
+#bununla birlikte bilgisayar açıldığında bize sistem bilgilerini de gönderecek böylece uzaktan bilgisayarın durumunu görebileceğiz
+
