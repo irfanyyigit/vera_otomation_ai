@@ -1,7 +1,5 @@
 streamlit
 psutil
-streamlit
-psutil
 pandas
 streamlit-autorefresh
 requests
