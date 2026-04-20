@@ -4,6 +4,7 @@ import platform
 import socket
 import pandas as pd
 import time
+import platform
 
 def render_system_info():
     st.title("Sistem Bilgisi")
@@ -50,7 +51,10 @@ def render_system_info():
     st.subheader("Bellek & Depolama")
 
     mem = psutil.virtual_memory()
-    disk = psutil.disk_usage('C:\\')
+    if platform.system() == "Windows":
+        disk = psutil.disk_usage('C:\\')
+    else:
+        disk = psutil.disk_usage('/')
 
     c1, c2, c3 = st.columns(3)
 
