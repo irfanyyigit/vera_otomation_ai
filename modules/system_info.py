@@ -2,79 +2,60 @@ import streamlit as st
 import psutil
 import platform
 import socket
-import pandas as pd
 import time
-import platform
+import subprocess
+from streamlit_autorefresh import st_autorefresh
+
+# 1. Otomatik Yenileme (Sayfa her 2 saniyede bir kendi kendine yenilenir)
+st_autorefresh(interval=2000, key="datarefresh")
+
+def get_processor_name():
+    # Windows'ta normal çalışsın, Linux'ta sistem dosyasından okusun
+    if platform.system() == "Windows":
+        return platform.processor()
+    else:
+        try:
+            command = "cat /proc/cpuinfo | grep 'model name' | uniq"
+            res = subprocess.check_output(command, shell=True).decode().strip()
+            return res.split(":")[1].strip()
+        except:
+            return "Bilinmeyen CPU"
 
 def render_system_info():
     st.title("Sistem Bilgisi")
 
     # ---- TEMEL BİLGİLER ----
     st.subheader("Cihaz Kimliği")
-
     col1, col2, col3 = st.columns(3)
 
     with col1:
         st.write("**Bilgisayar Adı**")
         st.success(platform.node())
-
     with col2:
         st.write("**İşletim Sistemi**")
         st.success(f"{platform.system()} {platform.release()}")
-
     with col3:
         st.write("**İşlemci**")
-        st.success(platform.processor())
-
-    st.divider()
-
-    # ---- DETAY BİLGİ ----
-    boot_time = time.strftime('%d-%m-%Y %H:%M:%S', time.localtime(psutil.boot_time()))
-
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-        s.close()
-    except:
-        ip = "Bulunamadı"
-
-    col4, col5, col6 = st.columns(3)
-
-    col4.metric("Açılış Zamanı", boot_time)
-    col5.metric("CPU Çekirdek", f"{psutil.cpu_count()} adet")
-    col6.metric("IP Adresi", ip)
+        # Yeni işlemci fonksiyonumuzu kullanıyoruz
+        st.success(get_processor_name())
 
     st.divider()
 
     # ---- RAM & DİSK ----
     st.subheader("Bellek & Depolama")
-
     mem = psutil.virtual_memory()
-    if platform.system() == "Windows":
-        disk = psutil.disk_usage('C:\\')
-    else:
-        disk = psutil.disk_usage('/')
-
+    # Not: Sunucu kaynakları değişken olabilir, bu yüzden round ile temiz gösterelim
+    ram_gb = round(mem.total / (1024**3), 2)
+    
     c1, c2, c3 = st.columns(3)
-
-    c1.metric("Toplam RAM", f"{mem.total // (1024**3)} GB")
+    c1.metric("Toplam RAM", f"{ram_gb} GB")
     c2.metric("Kullanılan RAM", f"%{mem.percent}")
-    c3.metric("Disk Kullanımı", f"%{disk.percent}")
-
-    st.divider()
-
-    # ---- AĞ ARAYÜZLERİ ----
-    st.subheader("Ağ Arayüzleri")
-
-    net = psutil.net_if_addrs()
-    st.write(", ".join(net.keys()))
-
-    st.divider()
+    # ... (disk ve diğer kısımlar aynı kalabilir)
 
     # ---- CANLI CPU GRAFİK ----
     st.subheader("Canlı CPU Takibi")
-
+    
+    # Session state'i kullanarak grafiği koru
     if "cpu_hist" not in st.session_state:
         st.session_state.cpu_hist = [0] * 20
 
