@@ -16,3 +16,10 @@ pip install pyTelegramBotAPI #bu eger yuklenmezse program calısmaz
 #bruada amacımız bilgisayar açıldığında telegram üzerinden bize bildirim göndermek ve kapatma komutu vermek olacak
 #bununla birlikte bilgisayar açıldığında bize sistem bilgilerini de gönderecek böylece uzaktan bilgisayarın durumunu görebileceğiz
 
+1. Yerel Bilgisayar vs. Bulut (Container) Dünyası
+Sen kodu kendi bilgisayarında çalıştırırken (Windows), VERA AI doğrudan senin donanımına (Wi-Fi kartın, Ethernet girişin, Bluetooth, VirtualBox sanal kartların vb.) erişiyordu. Windows, tüm bu donanım sürücülerini tek tek görüyor.
+
+Ancak Streamlit Cloud, uygulamanı bir "Container" (Konteyner/Kutu) içinde çalıştırır.
+
+Bu sistem, uygulamanı güvenli bir şekilde çalıştırmak için izole bir Linux ortamı oluşturur. Bu ortamın dış dünya ile tek bir bağlantısı vardır. Dolayısıyla, uygulama senin "bilgisayarının ağını" değil, kendisine ayrılan bu "sanal kutunun ağını" görür.
+
