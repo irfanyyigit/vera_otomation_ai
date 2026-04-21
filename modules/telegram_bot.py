@@ -151,4 +151,4 @@ except:
 # =========================
 # BOT ÇALIŞTIR
 # =========================
-bot.infinity_polling()
+bot.infinity_polling(non_stop=True, interval=1)
