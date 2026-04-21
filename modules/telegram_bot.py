@@ -3,13 +3,18 @@ import os
 import platform
 import socket
 import time
+import threading
+import psutil
+import webbrowser
 
 API_TOKEN = "8656070565:AAHQxJ9Ye_ru6NZ4zo2RQmJtfXG54tYBE1w"
 CHAT_ID = "7621297112"
 
 bot = telebot.TeleBot(API_TOKEN)
 
-
+# =========================
+# SYSTEM INFO
+# =========================
 def get_ip():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -20,38 +25,113 @@ def get_ip():
     except:
         return "IP alınamadı"
 
+def system_report():
+    cpu = psutil.cpu_percent()
+    ram = psutil.virtual_memory().percent
+    disk = psutil.disk_usage('/').percent
 
-def get_system_info():
     return f"""
-Sistem Açıldı!
-Cihaz: {platform.node()}
+VERA RAPOR
+PC: {platform.node()}
 IP: {get_ip()}
-OS: {platform.system()} {platform.release()}
+
+CPU: %{cpu}
+RAM: %{ram}
+DISK: %{disk}
 """
 
-
-# Başlangıç mesajı (internet hazır olana kadar retry)
-def send_startup_message():
-    for _ in range(5):  # 5 kez dene
+# =========================
+# PERİYODİK RAPOR
+# =========================
+def periodic_report():
+    while True:
         try:
-            bot.send_message(CHAT_ID, get_system_info())
-            return
-        except Exception as e:
-            time.sleep(3)
+            bot.send_message(CHAT_ID, system_report())
+        except:
+            pass
+        time.sleep(600)  # 10 dk
 
+threading.Thread(target=periodic_report, daemon=True).start()
 
-send_startup_message()
+# =========================
+# GÜVENLİK KONTROL
+# =========================
+def is_authorized(message):
+    return str(message.chat.id) == CHAT_ID
 
+# =========================
+# TEMİZLE KOMUTU
+# =========================
+@bot.message_handler(commands=['temizle'])
+def clean_pc(message):
+    if not is_authorized(message):
+        return
 
-# Güvenli kapatma komutu
-@bot.message_handler(commands=['kapat'])
-def shutdown(message):
-    if str(message.chat.id) == CHAT_ID:
-        bot.reply_to(message, "Bilgisayar 10 saniye içinde kapanıyor...")
-        os.system("shutdown /s /t 10")
+    bot.reply_to(message, "🧹 Derin temizlik başlatılıyor...")
+
+    # temp temizleme
+    os.system("del /q/f/s %TEMP%\\*")
+    os.system("del /q/f/s C:\\Windows\\Temp\\*")
+
+    # disk cleanup
+    os.system("cleanmgr /sagerun:1")
+
+    bot.send_message(CHAT_ID, "✅ Temizlik tamamlandı")
+
+# =========================
+# UYGULAMA AÇMA
+# =========================
+
+def open_app(name):
+    apps = {
+        "edge": "start msedge",
+        "chrome": "start chrome",
+        "notepad": "notepad",
+        "calc": "calc",
+        "cmd": "start cmd",
+        "powershell": "start powershell",
+    }
+
+    sites = {
+        "linkedin": "https://www.linkedin.com",
+        "whatsapp": "https://web.whatsapp.com",
+        "youtube": "https://www.youtube.com",
+        "gmail": "https://mail.google.com",
+        "github": "https://github.com",
+    }
+
+    if name in apps:
+        os.system(apps[name])
+        return f"{name} açıldı"
+
+    elif name in sites:
+        webbrowser.open(sites[name])
+        return f"{name} açıldı"
+
     else:
-        bot.reply_to(message, "Yetkin yok!")
+        return "Uygulama bulunamadı"
 
 
-# Botu başlat
+@bot.message_handler(commands=['edge','chrome','notepad','calc','cmd','powershell',
+                               'linkedin','whatsapp','youtube','gmail','github'])
+def open_command(message):
+    if not is_authorized(message):
+        return
+
+    cmd = message.text.replace("/", "")
+    result = open_app(cmd)
+
+    bot.send_message(CHAT_ID, result)
+
+# =========================
+# BAŞLANGIÇ MESAJI
+# =========================
+try:
+    bot.send_message(CHAT_ID, f"🚀 VERA AKTİF\n{system_report()}")
+except:
+    pass
+
+# =========================
+# BOT ÇALIŞTIR
+# =========================
 bot.infinity_polling()
