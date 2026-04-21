@@ -68,24 +68,7 @@ if "user_role" not in st.session_state:
 if "username" not in st.session_state:
     st.session_state.username = None  
 
-login_success = login_page()
 
-if login_success:
-    st.session_state.logged_in = True
-
-
-if st.session_state.get("logged_in"):
-
-    if "bot_started" not in st.session_state:
-
-        thread = threading.Thread(target=start_telegram_bot, daemon=True)
-        thread.start()
-
-        if "startup_msg_sent" not in st.session_state:
-            bot.send_message(CHAT_ID, "🚀 VERA AKTİF")
-            st.session_state.startup_msg_sent = True
-
-        st.session_state.bot_started = True
 
 # ---------------- FLOW ----------------
 if not st.session_state.logged_in:
