@@ -81,9 +81,8 @@ if st.session_state.get("logged_in"):
         thread = threading.Thread(target=start_telegram_bot, daemon=True)
         thread.start()
 
-        # TEK SEFERLİK MESAJ
         if "startup_msg_sent" not in st.session_state:
-            bot.send_message(CHAT_ID, "🚀 VERA SİSTEMİ AKTİF")
+            bot.send_message(CHAT_ID, "🚀 VERA AKTİF")
             st.session_state.startup_msg_sent = True
 
         st.session_state.bot_started = True
