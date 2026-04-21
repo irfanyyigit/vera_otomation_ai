@@ -7,7 +7,9 @@ import subprocess
 from streamlit_autorefresh import st_autorefresh
 
 # 1. Otomatik Yenileme (Sayfa her 2 saniyede bir kendi kendine yenilenir)
-st_autorefresh(interval=2000, key="global_refresh")
+    st_autorefresh(interval=2000, key="global_refresh")
+
+
 
 def get_processor_name():
     # Windows'ta normal çalışsın, Linux'ta sistem dosyasından okusun
