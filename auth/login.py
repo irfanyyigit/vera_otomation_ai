@@ -58,6 +58,7 @@ def login_page():
                     st.rerun()
                 else:
                     st.error("Hatalı giriş!")
+            return False
 
     # -------- REGISTER --------
     with tab2:
