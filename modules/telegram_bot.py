@@ -11,7 +11,7 @@ import webbrowser
 from telebot.types import BotCommand
 
 
-API_TOKEN = "8656070565:AAFgfOct8LXuFM1uAY-Z3eCQwck-2tbTpow"
+API_TOKEN = "8656070565:AAEOg6jx6ZIVe5LsinV1As_LWc6jMLBuzDU"
 CHAT_ID = "7621297112"
 
 bot = telebot.TeleBot(API_TOKEN)
@@ -83,7 +83,7 @@ def clean_pc(message):
     if not is_authorized(message):
         return
 
-    bot.reply_to(message, "🧹 Derin temizlik başlatılıyor...")
+    bot.reply_to(message, "Derin temizlik başlatılıyor...")
 
     # temp temizleme
     os.system("del /q/f/s %TEMP%\\*")
@@ -143,7 +143,7 @@ def open_command(message):
 # BAŞLANGIÇ MESAJI
 # =========================
 try:
-    bot.send_message(CHAT_ID, f"🚀 VERA AKTİF\n{system_report()}")
+    bot.send_message(CHAT_ID, f"VERA AKTİF\n{system_report()}")
 except:
     pass
 

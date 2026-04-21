@@ -14,7 +14,7 @@ import telebot
 import time
 
 
-API_TOKEN = "8656070565:AAFgfOct8LXuFM1uAY-Z3eCQwck-2tbTpow"
+API_TOKEN = "8656070565:AAEOg6jx6ZIVe5LsinV1As_LWc6jMLBuzDU"
 CHAT_ID = "7621297112"
 
 bot = telebot.TeleBot(API_TOKEN)
