@@ -7,10 +7,26 @@ import threading
 import psutil
 import webbrowser
 
-API_TOKEN = "8656070565:AAHQxJ9Ye_ru6NZ4zo2RQmJtfXG54tYBE1w"
+
+from telebot.types import BotCommand
+
+
+API_TOKEN = "8656070565:AAFgfOct8LXuFM1uAY-Z3eCQwck-2tbTpow"
 CHAT_ID = "7621297112"
 
 bot = telebot.TeleBot(API_TOKEN)
+
+bot.set_my_commands([
+    BotCommand("durum", "Sistem durumunu göster"),
+    BotCommand("temizle", "Bilgisayarı temizle"),
+    BotCommand("edge", "Edge aç"),
+    BotCommand("chrome", "Chrome aç"),
+    BotCommand("linkedin", "LinkedIn aç"),
+    BotCommand("whatsapp", "WhatsApp Web aç"),
+    BotCommand("youtube", "YouTube aç"),
+    BotCommand("gmail", "Gmail aç"),
+    BotCommand("github", "GitHub aç"),
+])
 
 # =========================
 # SYSTEM INFO
