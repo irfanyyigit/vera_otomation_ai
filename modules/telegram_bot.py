@@ -5,6 +5,7 @@ import socket
 import time
 import threading
 import psutil
+import subprocess
 import webbrowser
 
 
@@ -92,13 +93,14 @@ def clean_pc(message):
     # disk cleanup
     os.system("cleanmgr /sagerun:1")
 
-    bot.send_message(CHAT_ID, "✅ Temizlik tamamlandı")
+    bot.send_message(CHAT_ID, "Temizlik tamamlandı")
 
 # =========================
 # UYGULAMA AÇMA
 # =========================
 
 def open_app(name):
+    
     apps = {
         "edge": "start msedge",
         "chrome": "start chrome",
@@ -117,15 +119,14 @@ def open_app(name):
     }
 
     if name in apps:
-        os.system(apps[name])
-        return f"{name} açıldı"
-
+        # subprocess.Popen ile arka planda hızlıca çalıştır
+        subprocess.Popen(apps[name], shell=True)
+        return f"{name} tetiklendi."
     elif name in sites:
         webbrowser.open(sites[name])
-        return f"{name} açıldı"
-
+        return f"{name} tarayıcıda açıldı."
     else:
-        return "Uygulama bulunamadı"
+        return "Uygulama bulunamadı."
 
 
 @bot.message_handler(commands=['edge','chrome','notepad','calc','cmd','powershell',
@@ -134,7 +135,7 @@ def open_command(message):
     if not is_authorized(message):
         return
 
-    cmd = message.text.replace("/", "")
+    cmd = message.text.lower().replace("/", "").replace("ı", "i")
     result = open_app(cmd)
 
     bot.send_message(CHAT_ID, result)
