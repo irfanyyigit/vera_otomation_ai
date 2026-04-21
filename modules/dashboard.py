@@ -8,7 +8,7 @@ def render_dashboard():
     st.title("Sistem Kontrol Paneli")
 
     # ================= SYSTEM STATS =================
-    st_autorefresh(interval=8000, key="global_refresh")
+    st_autorefresh(interval=6000, key="global_refresh")
 
     cpu = psutil.cpu_percent(interval=0.5)
     ram = psutil.virtual_memory().percent
