@@ -24,19 +24,19 @@ bot = telebot.TeleBot(API_TOKEN)
 # =========================
 def start_telegram_bot():
 
-    bot.send_message(CHAT_ID, "🚀 VERA + TELEGRAM AKTİF")
+    bot.send_message(CHAT_ID, "Sistem Uygulamanız Aktif Edilmiştir. İyi kullanımlar dileriz.")
 
     @bot.message_handler(commands=['durum'])
     def durum(message):
         if str(message.chat.id) != CHAT_ID:
             return
-        bot.send_message(CHAT_ID, "📊 Sistem aktif")
+        bot.send_message(CHAT_ID, "Sistem aktif")
 
     @bot.message_handler(commands=['temizle'])
     def temizle(message):
         if str(message.chat.id) != CHAT_ID:
             return
-        bot.send_message(CHAT_ID, "🧹 Temizlik başlatıldı")
+        bot.send_message(CHAT_ID, "Temizlik başlatıldı")
         # buraya senin clean kodun
 
     # Bot başlat
