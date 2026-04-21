@@ -7,7 +7,6 @@ import subprocess
 from streamlit_autorefresh import st_autorefresh
 
 # 1. Otomatik Yenileme (Sayfa her 2 saniyede bir kendi kendine yenilenir)
-    st_autorefresh(interval=2000, key="global_refresh")
 
 
 
@@ -25,6 +24,9 @@ def get_processor_name():
 
 def render_system_info():
     st.title("Sistem Bilgisi")
+    
+    st_autorefresh(interval=2000, key="global_refresh")
+
 
     # ---- TEMEL BİLGİLER ----
     st.subheader("Cihaz Kimliği")
