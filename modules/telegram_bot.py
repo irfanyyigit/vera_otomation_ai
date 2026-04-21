@@ -129,8 +129,7 @@ def open_app(name):
         return "Uygulama bulunamadı."
 
 
-@bot.message_handler(commands=['edge','chrome','notepad','calc','cmd','powershell',
-                               'linkedin','whatsapp','youtube','gmail','github'])
+@bot.message_handler(func=lambda message: message.text.startswith('/'))
 def open_command(message):
     if not is_authorized(message):
         return
