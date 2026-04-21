@@ -8,7 +8,6 @@ from streamlit_autorefresh import st_autorefresh
 
 
 
-
 def get_processor_name():
     # Windows'ta normal çalışsın, Linux'ta sistem dosyasından okusun
     if platform.system() == "Windows":
@@ -23,7 +22,7 @@ def get_processor_name():
 
 def render_system_info():
     st.title("Sistem Bilgisi")
-    
+
     # 1. Otomatik Yenileme (Sayfa her 2 saniyede bir kendi kendine yenilenir)
     st_autorefresh(interval=2000, key="global_refresh")
 
