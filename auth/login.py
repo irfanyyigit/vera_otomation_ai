@@ -16,9 +16,8 @@ def check_user_credentials(username, password):
 
         if verify_password(stored_password, password):
             return role
-
+        
     return None
-
 
 # ---------------- REGISTER ----------------
 def register_user(username, password):
