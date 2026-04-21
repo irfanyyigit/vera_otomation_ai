@@ -24,6 +24,8 @@ bot = telebot.TeleBot(API_TOKEN)
 # =========================
 def start_telegram_bot():
 
+    bot.send_message(CHAT_ID, "🚀 VERA + TELEGRAM AKTİF")
+
     @bot.message_handler(commands=['durum'])
     def durum(message):
         if str(message.chat.id) != CHAT_ID:
