@@ -5,7 +5,7 @@ import streamlit as st
 from auth.login import login_page
 from db.database import init_db
 from modules.system_info import render_system_info
-from modules.maintenance import render_maintenance
+from modules.maintenance import render_advanced_monitoring
 from modules.dashboard import render_dashboard
 from modules.security import render_security
 from modules.support import render_support
