@@ -2,6 +2,7 @@ import streamlit as st
 import psutil
 import plotly.express as px
 import pandas as pd
+import platform
 from datetime import datetime
 
 def render_advanced_monitoring():
@@ -87,5 +88,54 @@ def render_report_section(history_data):
         )
     else:
         st.warning("Henüz raporlanacak veri toplanmadı.") # Veri yoksa neden gelmediğini burada görürsün
+
+# Veri toplama fonksiyonunu güncelle
+def update_history():
+    new_row = {
+        "Zaman": datetime.now().strftime("%H:%M:%S"),
+        "CPU": psutil.cpu_percent(),
+        "RAM": psutil.virtual_memory().percent
+    }
+    # Veriyi ekle (son 20 kayıt kalsın ki dashboard şişmesin)
+    st.session_state.history = pd.concat([st.session_state.history, pd.DataFrame([new_row])]).tail(20)
+
+# Dashboard'da Göster
+update_history()
+st.subheader("📈 Performans Trendi (Son 20 Ölçüm)")
+st.line_chart(st.session_state.history.set_index("Zaman"))
+
+def render_system_metadata():
+    st.subheader("⚙️ Sistem Altyapısı")
+    
+    # Platform bilgisi
+    uname = platform.uname()
+    
+    col1, col2 = st.columns(2)
+    col1.metric("İşletim Sistemi", uname.system)
+    col2.metric("Makine/Node", uname.node)
+    
+    # Detaylı tablo
+    meta_data = {
+        "Versiyon": uname.version,
+        "İşlemci Mimarisi": uname.machine,
+        "İşlemci Modeli": uname.processor,
+        "Boot Zamanı": datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")
+    }
+    st.table(pd.DataFrame(meta_data.items(), columns=["Özellik", "Değer"]))
+
+def render_network_stats():
+    st.subheader("🌐 Ağ ve Disk Trafiği")
+    
+    net = psutil.net_io_counters()
+    disk = psutil.disk_io_counters()
+    
+    c1, c2 = st.columns(2)
+    c1.metric("Gönderilen (Net)", f"{net.bytes_sent // 1024**2} MB")
+    c1.metric("Alınan (Net)", f"{net.bytes_recv // 1024**2} MB")
+    
+    c2.metric("Okunan (Disk)", f"{disk.read_bytes // 1024**2} MB")
+    c2.metric("Yazılan (Disk)", f"{disk.write_bytes // 1024**2} MB")
+
+
 
 

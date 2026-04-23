@@ -1,11 +1,12 @@
 import sys
 import os
+import pandas as pd
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import streamlit as st
 from auth.login import login_page
 from db.database import init_db
 from modules.system_info import render_system_info
-from modules.maintenance import render_advanced_monitoring, render_report_section
+from modules.maintenance import render_advanced_monitoring, render_report_section, update_history, render_system_metadata, render_network_stats
 from modules.dashboard import render_dashboard
 from modules.security import render_security
 from modules.support import render_support
@@ -22,6 +23,9 @@ if "user_role" not in st.session_state:
 
 if "username" not in st.session_state:
     st.session_state.username = None  
+
+if "history" not in st.session_state:
+    st.session_state.history = pd.DataFrame(columns=["Zaman", "CPU", "RAM"])
 
 
 # ---------------- FLOW ----------------
@@ -74,7 +78,10 @@ else:
     elif choice == "Hızlı Bakım Merkezi":
         render_advanced_monitoring()
         render_report_section(st.session_state.history_data)
-
+        update_history()
+        render_system_metadata()
+        render_network_stats()
+        
     # ---------------- LOGOUT ----------------
     st.sidebar.markdown("---")
     if st.sidebar.button("Çıkış"):
