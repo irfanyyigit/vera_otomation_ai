@@ -1,73 +1,63 @@
 import streamlit as st
 import psutil
-import os
-import shutil
-import time
+import platform
+import plotly.express as px
+import pandas as pd
+from datetime import datetime
 
-# -------- AĞIR PROCESS BUL --------
-def get_heavy_processes():
-    processes = []
-    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
-        try:
-            if proc.info['cpu_percent'] > 1 or proc.info['memory_percent'] > 1:
-                processes.append(proc.info)
-        except:
-            pass
-    return sorted(processes, key=lambda x: x['memory_percent'], reverse=True)
+def render_advanced_monitoring():
+    st.title("📊 VERA AI - Sistem İzleme Paneli")
+    
+    # 1. Dashboard Tabs (Profesyonel yapı)
+    tab1, tab2, tab3 = st.tabs(["Sistem Sağlığı", "Disk ve Depolama", "Canlı Süreçler"])
 
-# -------- ANA MODÜL --------
-def render_maintenance():
-    st.title("Hızlı Bakım Merkezi")
+    with tab1:
+        st.subheader("CPU & RAM Performansı")
+        
+        # CPU Verisi
+        cpu_perc = psutil.cpu_percent(interval=1)
+        mem = psutil.virtual_memory()
+        
+        # Plotly ile şık grafik
+        df_stats = pd.DataFrame({
+            "Kaynak": ["CPU", "RAM"],
+            "Kullanım (%)": [cpu_perc, mem.percent]
+        })
+        
+        fig = px.bar(df_stats, x="Kaynak", y="Kullanım (%)", color="Kaynak", 
+                     range_y=[0, 100], text_auto=True)
+        st.plotly_chart(fig, use_container_width=True)
 
-    # ---- TEMİZLİK ----
-    st.subheader("Sistem Temizliği")
+        # Metrikler
+        c1, c2 = st.columns(2)
+        c1.metric("CPU Kullanımı", f"%{cpu_perc}")
+        c2.metric("RAM Kullanımı", f"%{mem.percent}", f"{mem.used // (1024**2)} MB / {mem.total // (1024**2)} MB")
 
-    if st.button("Geçici Dosyaları Temizle"):
-        total_deleted = 0
+    with tab2:
+        st.subheader("Disk Bölümleri (Linux/Cloud Uyumlu)")
+        partitions = psutil.disk_partitions()
+        for p in partitions:
+            try:
+                usage = psutil.disk_usage(p.mountpoint)
+                st.write(f"**{p.device}** ({p.mountpoint})")
+                st.progress(usage.percent / 100)
+                st.caption(f"Toplam: {usage.total // (1024**3)} GB | Kullanılan: {usage.used // (1024**3)} GB")
+            except:
+                continue
 
-        temp_paths = [
-            os.environ.get('TEMP'),
-            "C:\\Windows\\Temp"
-        ]
+    with tab3:
+        st.subheader("Aktif Süreçler (İzleme Modu)")
+        # Sadece en çok kaynak tüketen ilk 10'u göster
+        procs = []
+        for p in psutil.process_iter(['name', 'cpu_percent', 'memory_percent']):
+            try:
+                procs.append(p.info)
+            except:
+                continue
+        
+        df_procs = pd.DataFrame(procs)
+        df_procs = df_procs.sort_values(by="memory_percent", ascending=False).head(10)
+        
+        st.dataframe(df_procs, use_container_width=True)
 
-        for path in temp_paths:
-            if path and os.path.exists(path):
-                for file in os.listdir(path):
-                    file_path = os.path.join(path, file)
-                    try:
-                        if os.path.isfile(file_path):
-                            os.unlink(file_path)
-                            total_deleted += 1
-                        elif os.path.isdir(file_path):
-                            shutil.rmtree(file_path)
-                            total_deleted += 1
-                    except:
-                        pass
-
-        st.success(f"{total_deleted} dosya temizlendi")
-
-    st.divider()
-
-    # ---- ZOMBİ AVCISI ----
-    st.subheader("Zombi Avcısı (RAM Temizleme)")
-
-    if "proc_list" not in st.session_state:
-        st.session_state.proc_list = []
-
-    if st.button("Ağır Süreçleri Tara"):
-        st.session_state.proc_list = get_heavy_processes()
-
-    if st.session_state.proc_list:
-        for p in st.session_state.proc_list[:10]:
-            col1, col2, col3 = st.columns([2, 2, 1])
-
-            col1.write(f"{p['name']} (PID: {p['pid']})")
-            col2.write(f"RAM: %{p['memory_percent']:.1f} | CPU: %{p['cpu_percent']:.1f}")
-
-            if col3.button("Kapat", key=p['pid']):
-                try:
-                    psutil.Process(p['pid']).terminate()
-                    st.success(f"{p['name']} kapatıldı")
-                    st.rerun()
-                except:
-                    st.error("Kapatılamadı (yetki gerekli olabilir)")
+    st.sidebar.info(f"Sistem Zamanı: {datetime.now().strftime('%H:%M:%S')}")

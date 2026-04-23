@@ -3,4 +3,4 @@ psutil
 pandas
 streamlit-autorefresh
 requests
-pyTelegramBotAPI
+plotly>=5.0.0
