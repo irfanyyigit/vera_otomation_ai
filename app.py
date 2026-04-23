@@ -9,51 +9,6 @@ from modules.maintenance import render_maintenance
 from modules.dashboard import render_dashboard
 from modules.security import render_security
 from modules.support import render_support
-import threading
-import telebot
-import time
-
-
-API_TOKEN = "8656070565:AAEOg6jx6ZIVe5LsinV1As_LWc6jMLBuzDU"
-CHAT_ID = "7621297112"
-
-bot = telebot.TeleBot(API_TOKEN)
-
-# =========================
-# TELEGRAM BOT FONKSİYONU
-# =========================
-def start_telegram_bot():
-
-    bot.send_message(CHAT_ID, "Sistem Uygulamanız Aktif Edilmiştir. İyi kullanımlar dileriz.")
-
-    @bot.message_handler(commands=['durum'])
-    def durum(message):
-        if str(message.chat.id) != CHAT_ID:
-            return
-        bot.send_message(CHAT_ID, "Sistem aktif")
-
-    @bot.message_handler(commands=['temizle'])
-    def temizle(message):
-        if str(message.chat.id) != CHAT_ID:
-            return
-        bot.send_message(CHAT_ID, "Temizlik başlatıldı")
-        # buraya senin clean kodun
-
-    # Bot başlat
-    while True:
-        try:
-            bot.infinity_polling(timeout=10, long_polling_timeout=5)
-        except Exception as e:
-            print("Bot hata verdi, yeniden başlatılıyor:", e)
-            time.sleep(5)
-
-# =========================
-# SADECE 1 KEZ BAŞLAT
-# =========================
-if "bot_started" not in st.session_state:
-    thread = threading.Thread(target=start_telegram_bot, daemon=True)
-    thread.start()
-    st.session_state.bot_started = True
 
 # DB INIT
 init_db()
@@ -67,7 +22,6 @@ if "user_role" not in st.session_state:
 
 if "username" not in st.session_state:
     st.session_state.username = None  
-
 
 
 # ---------------- FLOW ----------------
