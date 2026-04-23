@@ -66,16 +66,16 @@ def render_report_section(history_data):
     st.divider()
     st.subheader("📋 Veri Raporlama")
     
-    # Veriyi DataFrame'e çevir
-    df = pd.DataFrame(history_data)
-    
-    # Raporu hazırlat
-    csv = df.to_csv(index=False).encode('utf-8')
-    
-    st.download_button(
-        label="📥 CSV Olarak İndir (Raporla)",
-        data=csv,
-        file_name='vera_sistem_raporu.csv',
-        mime='text/csv',
-    )
-    st.info("Bu rapor, sistemin o anki performans verilerini analiz için saklamanı sağlar.")
+    # Test et: Veri var mı?
+    if history_data:
+        df = pd.DataFrame(history_data)
+        csv = df.to_csv(index=False).encode('utf-8')
+        
+        st.download_button(
+            label="📥 CSV Olarak İndir (Raporla)",
+            data=csv,
+            file_name='vera_sistem_raporu.csv',
+            mime='text/csv',
+        )
+    else:
+        st.warning("Henüz raporlanacak veri toplanmadı.") # Veri yoksa neden gelmediğini burada görürsün
