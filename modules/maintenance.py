@@ -72,8 +72,6 @@ def render_advanced_monitoring():
 
 
 def render_report_section(history_data):
-    st.divider()
-    st.subheader("📋 Veri Raporlama")
     
     # Test et: Veri var mı?
     if history_data:
