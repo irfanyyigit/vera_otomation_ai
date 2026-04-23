@@ -72,7 +72,7 @@ else:
         render_system_info()
 
     elif choice == "Hızlı Bakım Merkezi":
-        render_maintenance()
+        render_advanced_monitoring()
 
     # ---------------- LOGOUT ----------------
     st.sidebar.markdown("---")
