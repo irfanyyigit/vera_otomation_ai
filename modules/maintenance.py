@@ -1,6 +1,5 @@
 import streamlit as st
 import psutil
-import platform
 import plotly.express as px
 import pandas as pd
 from datetime import datetime
@@ -61,3 +60,21 @@ def render_advanced_monitoring():
         st.dataframe(df_procs, use_container_width=True)
 
     st.sidebar.info(f"Sistem Zamanı: {datetime.now().strftime('%H:%M:%S')}")
+
+def render_report_section(history_data):
+    st.divider()
+    st.subheader("📋 Veri Raporlama")
+    
+    # Veriyi DataFrame'e çevir
+    df = pd.DataFrame(history_data)
+    
+    # Raporu hazırlat
+    csv = df.to_csv(index=False).encode('utf-8')
+    
+    st.download_button(
+        label="📥 CSV Olarak İndir (Raporla)",
+        data=csv,
+        file_name='vera_sistem_raporu.csv',
+        mime='text/csv',
+    )
+    st.info("Bu rapor, sistemin o anki performans verilerini analiz için saklamanı sağlar.")
