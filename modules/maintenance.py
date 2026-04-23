@@ -61,6 +61,7 @@ def render_advanced_monitoring():
 
     st.sidebar.info(f"Sistem Zamanı: {datetime.now().strftime('%H:%M:%S')}")
 
+
 def render_report_section(history_data):
     st.divider()
     st.subheader("📋 Veri Raporlama")
