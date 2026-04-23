@@ -61,6 +61,14 @@ def render_advanced_monitoring():
 
     st.sidebar.info(f"Sistem Zamanı: {datetime.now().strftime('%H:%M:%S')}")
 
+                # Veriyi toplarken şunu yap:
+    if "history_data" not in st.session_state:
+        st.session_state.history_data = []
+
+    # Her döngüde yeni veriyi ekle:
+    new_data = {"CPU": cpu_perc, "RAM": mem.percent, "Time": datetime.now().strftime("%H:%M:%S")}
+    st.session_state.history_data.append(new_data)
+
 
 def render_report_section(history_data):
     st.divider()
@@ -79,3 +87,5 @@ def render_report_section(history_data):
         )
     else:
         st.warning("Henüz raporlanacak veri toplanmadı.") # Veri yoksa neden gelmediğini burada görürsün
+
+
