@@ -103,6 +103,7 @@ def update_history():
     # DataFrame güncelleme
     new_df = pd.DataFrame([new_row])
     st.session_state.history = pd.concat([st.session_state.history, new_df]).tail(20)  # Son 20 kaydı tut
+    st.divider()
 
 def render_system_metadata():
     st.subheader("⚙️ Sistem Altyapısı")
@@ -124,6 +125,7 @@ def render_system_metadata():
     st.table(pd.DataFrame(meta_data.items(), columns=["Özellik", "Değer"]))
 
 def render_network_stats():
+    st.divider()
     st.subheader("🌐 Ağ ve Disk Trafiği")
     
     net = psutil.net_io_counters()
