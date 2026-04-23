@@ -14,6 +14,10 @@ from modules.support import render_support
 # DB INIT
 init_db()
 
+update_history()
+
+render_advanced_monitoring()
+
 # ---------------- SESSION ----------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -81,7 +85,7 @@ else:
         update_history()
         render_system_metadata()
         render_network_stats()
-        
+
     # ---------------- LOGOUT ----------------
     st.sidebar.markdown("---")
     if st.sidebar.button("Çıkış"):

@@ -91,18 +91,20 @@ def render_report_section(history_data):
 
 # Veri toplama fonksiyonunu güncelle
 def update_history():
+    # ÖNCE KONTROL ET: Bu anahtar var mı? Yoksa oluştur.
+    if "history" not in st.session_state:
+        st.session_state.history = pd.DataFrame(columns=["Zaman", "CPU", "RAM"])
+    
+    # Veri ekleme mantığı
     new_row = {
         "Zaman": datetime.now().strftime("%H:%M:%S"),
         "CPU": psutil.cpu_percent(),
         "RAM": psutil.virtual_memory().percent
     }
-    # Veriyi ekle (son 20 kayıt kalsın ki dashboard şişmesin)
-    st.session_state.history = pd.concat([st.session_state.history, pd.DataFrame([new_row])]).tail(20)
-
-# Dashboard'da Göster
-update_history()
-st.subheader("📈 Performans Trendi (Son 20 Ölçüm)")
-st.line_chart(st.session_state.history.set_index("Zaman"))
+    
+    # DataFrame güncelleme
+    new_df = pd.DataFrame([new_row])
+    st.session_state.history = pd.concat([st.session_state.history, new_df]).tail(20)  # Son 20 kaydı tut
 
 def render_system_metadata():
     st.subheader("⚙️ Sistem Altyapısı")
