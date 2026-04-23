@@ -5,7 +5,7 @@ import streamlit as st
 from auth.login import login_page
 from db.database import init_db
 from modules.system_info import render_system_info
-from modules.maintenance import render_advanced_monitoring
+from modules.maintenance import render_advanced_monitoring, render_report_section
 from modules.dashboard import render_dashboard
 from modules.security import render_security
 from modules.support import render_support
@@ -73,6 +73,8 @@ else:
 
     elif choice == "Hızlı Bakım Merkezi":
         render_advanced_monitoring()
+        # app.py'ın en altı
+        render_report_section(st.session_state.history_data)
 
     # ---------------- LOGOUT ----------------
     st.sidebar.markdown("---")
