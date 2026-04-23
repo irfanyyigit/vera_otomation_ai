@@ -16,7 +16,6 @@ init_db()
 
 update_history()
 
-render_advanced_monitoring()
 
 # ---------------- SESSION ----------------
 if "logged_in" not in st.session_state:
